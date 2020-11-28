@@ -3,6 +3,12 @@
   "version": "1.0.0-beta.1",
   "description": "A nodejs web framework basedon koa.",
   "main": "lib/index.js",
+  "scripts": {
+    "lint": "eslint lib",
+    "test": "echo pass!",
+    "ci": "npm run lint && npm run test",
+    "postinstall": "husky install"
+  },
   "dependencies": {
     "@koa/cors": "^3.1.0",
     "assert": "^2.0.0",
@@ -26,7 +32,9 @@
   },
   "devDependencies": {
     "eslint": "^7.14.0",
-    "eslint-config-bce": "^7.0.0"
+    "eslint-config-bce": "^7.0.0",
+    "husky": "^5.0.4",
+    "pinst": "^2.1.1"
   },
   "repository": "git@github.com:bencode/avada.git",
   "author": "bencode <bencode@163.com>",
