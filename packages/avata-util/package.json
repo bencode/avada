@@ -1,6 +1,6 @@
 {
   "name": "avada-util",
-  "version": "1.0.0",
+  "version": "1.0.0-beta.1",
   "description": "utility tools for application",
   "main": "lib/index.js",
   "scripts": {
