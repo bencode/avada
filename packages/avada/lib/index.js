@@ -9,6 +9,8 @@ const Components = [
 
 module.exports = function(config) {
   const app = new Koa();
+  let started = false;
+  let stopped = false;
 
   const list = [];
   for (const name of Components) {
@@ -20,7 +22,13 @@ module.exports = function(config) {
   }
 
   app.start = async(opts = {}) => {
+    if (started) {
+      debug('already started, ignore');
+      return;
+    }
+
     debug('app.start');
+    started = true;
     for (const item of list) {
       if (typeof item.start === 'function') {
         debug('start component: %s', item.name);
@@ -40,6 +48,15 @@ module.exports = function(config) {
   };
 
   app.stop = async() => {
+    if (!started) {
+      throw new Error('app not started');
+    }
+    if (stopped) {
+      debug('app stopped, ignore');
+      return;
+    }
+    stopped = true;
+
     debug('app.stop');
     for (const item of list.reverse()) {
       if (typeof item.stop === 'function') {

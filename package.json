@@ -1,0 +1,8 @@
+{
+  "name": "avada",
+  "description": "A nodejs web framework",
+  "private": true,
+  "repository": "git@github.com:bencode/avada.git",
+  "author": "bencode <bencode@163.com>",
+  "license": "MIT"
+}
