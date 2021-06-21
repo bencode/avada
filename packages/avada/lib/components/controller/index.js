@@ -1,5 +1,5 @@
 const pathUtil = require('path');
-const loadModule = require('../../utils/loadModule');
+const { tryLoadModule } = require('../../utils/module');
 const scanAppModules = require('../../utils/scanAppModules');
 const ControllerContainer = require('./ControllerContainer');
 
@@ -23,7 +23,7 @@ function setupControllers(controller, { controllerRoot }) {
   const list = scanAppModules(controllerRoot);
   for (const file of list) {
     const path = pathUtil.join(controllerRoot, file);
-    const mod = loadModule(path);
+    const mod = tryLoadModule(path);
     if (mod) {
       const name = pathUtil.basename(file, pathUtil.extname(file));
       controller.add(name, mod);

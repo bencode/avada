@@ -1,6 +1,6 @@
 const pathUtil = require('path');
 const scanAppModules = require('../../utils/scanAppModules');
-const loadModule = require('../../utils/loadModule');
+const { tryLoadModule } = require('../../utils/module');
 const ServiceContainer = require('./ServiceContainer');
 
 
@@ -26,10 +26,9 @@ function setupServices(container, { serviceRoot }) {
   for (const file of list) {
     const name = pathUtil.basename(file, pathUtil.extname(file));
     const path = pathUtil.join(serviceRoot, file);
-    const mod = loadModule(path);
-    const service = mod && mod.default ? mod.default : mod;
+    const service = tryLoadModule(path);
     if (service && typeof service === 'function') {
-      container.add(name, mod);
+      container.add(name, service);
     }
   }
 }
