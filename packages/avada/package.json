@@ -1,6 +1,6 @@
 {
   "name": "avada",
-  "version": "1.5.0-beta.7",
+  "version": "1.5.0-beta.8",
   "description": "A nodejs web framework basedon koa.",
   "main": "lib/index.js",
   "scripts": {
