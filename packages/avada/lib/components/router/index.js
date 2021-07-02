@@ -14,7 +14,7 @@ module.exports = function RouterComponent(app, settings) {
   const config = settings.router || {};
   const configRoot = config.configPath || pathUtil.join(appRoot, 'router');
 
-  const fn = tryLoadModule(configRoot);
+  const fn = tryLoadModule(configRoot, { checkExists: false });
   if (typeof fn === 'function') {
     const { middlewares, routes } = parse(fn);
     setupMiddlewares(app, middlewares);

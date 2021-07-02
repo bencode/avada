@@ -1,17 +1,16 @@
 const fs = require('fs');
 
-function tryLoadModule(path) {
-  if (checkModule(path)) {
+function tryLoadModule(path, opts = { checkExists: true }) {
+  if (checkModule(path, opts.checkExists)) {
     return loadModule(path);
   }
   return null;
 }
 
-function checkModule(path) {
-  if (fs.existsSync(path)) {
+function checkModule(path, checkExists) {
+  if (checkExists && !fs.existsSync(path)) {
     return false;
   }
-
   try {
     require.resolve(path);
     return true;
