@@ -8,6 +8,7 @@ const Components = [
 
 
 module.exports = function(config) {
+  config = normalizeConfig(config);
   const app = new Koa();
   let started = false;
   let stopped = false;
@@ -24,7 +25,7 @@ module.exports = function(config) {
   app.start = async(opts = {}) => {
     if (started) {
       debug('already started, ignore');
-      return;
+      return null;
     }
 
     debug('app.start');
@@ -86,4 +87,12 @@ module.exports = function(config) {
 function makeArray(list) {
   return (list === undefined || list === null) ? [] :
     Array.isArray(list) ? list : [list];
+}
+
+function normalizeConfig(config) {
+  return {
+    env: process.env.NODE_ENV || 'development',
+    applicationRoot: process.cwd(),
+    ...config
+  };
 }

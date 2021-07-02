@@ -14,7 +14,8 @@ module.exports = function ViewComponent(app, settings) {
   };
 
   const config = settings.view || {};
-  const viewRoot = config.viewRoot || pathUtil.join(settings.appRoot, 'views');
+  const appRoot = settings.applicationRoot;
+  const viewRoot = config.viewRoot || pathUtil.join(appRoot, 'views');
   installDefaultEngine(container, { env, config });
   setupViews(container, { env, viewRoot });
 };

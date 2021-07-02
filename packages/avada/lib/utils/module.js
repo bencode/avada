@@ -1,3 +1,5 @@
+const fs = require('fs');
+
 function tryLoadModule(path) {
   if (checkModule(path)) {
     return loadModule(path);
@@ -6,6 +8,10 @@ function tryLoadModule(path) {
 }
 
 function checkModule(path) {
+  if (fs.existsSync(path)) {
+    return false;
+  }
+
   try {
     require.resolve(path);
     return true;

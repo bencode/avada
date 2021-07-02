@@ -2,6 +2,9 @@ const fs = require('fs');
 const pathUtil = require('path');
 
 module.exports = function scanAppModules(dir) {
+  if (!fs.existsSync(dir)) {
+    return [];
+  }
   const list = fs.readdirSync(dir);
   return list.filter(name => isAppModule(name, dir));
 };
