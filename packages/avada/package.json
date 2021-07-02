@@ -11,6 +11,7 @@
   "dependencies": {
     "@koa/cors": "^3.1.0",
     "assert": "^2.0.0",
+    "chalk": "^4.1.1",
     "co-busboy": "^1.4.1",
     "debug": "^4.3.1",
     "ejs": "^3.1.5",
