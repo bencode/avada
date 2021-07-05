@@ -46,6 +46,7 @@ module.exports = class Router {
    *  - query   {Object}
    */
   route(path, request) {
+    debug('try route %s', path);
     if (this.routes.length === 0) {
       return null;
     }
