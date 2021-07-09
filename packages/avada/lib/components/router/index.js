@@ -1,6 +1,6 @@
 const pathUtil = require('path');
 const debug = require('debug')('avada:router');
-const loadModule = require('../../utils/loadModule');
+const { tryLoadModule } = require('../../utils/module');
 const pathToRegexp = require('../../utils/pathToRegexp');
 const parse = require('./parse');
 const AppRouter = require('./Router');
@@ -8,17 +8,20 @@ const AppRouter = require('./Router');
 
 module.exports = function RouterComponent(app, settings) {
   const router = new AppRouter();
-  app.router = router.add.bind(router);
+  app.Router = router;
 
   const appRoot = settings.applicationRoot;
   const config = settings.router || {};
   const configRoot = config.configPath || pathUtil.join(appRoot, 'router');
 
-  const fn = loadModule(configRoot);
-  const { middlewares, routes } = parse(fn);
-
-  setupMiddlewares(app, middlewares);
-  setupRules(router, routes);
+  const fn = tryLoadModule(configRoot, { checkExists: false });
+  if (typeof fn === 'function') {
+    const { middlewares, routes } = parse(fn);
+    setupMiddlewares(app, middlewares);
+    setupRules(router, routes);
+  } else {
+    global.console.error('router file not exits');
+  }
 
   app.use(createRouter(router), { level: 2 });
 };

@@ -1,12 +1,12 @@
-const fs = require('fs');
 const pathUtil = require('path');
-const loadModule = require('../../utils/loadModule');
+const scanAppModules = require('../../utils/scanAppModules');
+const { tryLoadModule } = require('../../utils/module');
 const ServiceContainer = require('./ServiceContainer');
 
 
 module.exports = function ServiceComponent(app, settings) {
   const container = new ServiceContainer(app);
-  app.service = container.add.bind(container);
+  app.Service = container;
 
   const appRoot = settings.applicationRoot;
   const config = settings.service || {};
@@ -22,16 +22,13 @@ module.exports = function ServiceComponent(app, settings) {
 
 
 function setupServices(container, { serviceRoot }) {
-  const rHidden = /^\..+/;
-  const list = fs.readdirSync(serviceRoot)
-    .filter(name => !rHidden.test(name));
+  const list = scanAppModules(serviceRoot);
   for (const file of list) {
     const name = pathUtil.basename(file, pathUtil.extname(file));
     const path = pathUtil.join(serviceRoot, file);
-    const mod = loadModule(path);
-    const service = mod && mod.default ? mod.default : mod;
+    const service = tryLoadModule(path);
     if (service && typeof service === 'function') {
-      container.add(name, mod);
+      container.add(name, service);
     }
   }
 }

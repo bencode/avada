@@ -1,6 +1,6 @@
-const fs = require('fs');
 const pathUtil = require('path');
-const loadModule = require('../../utils/loadModule');
+const { tryLoadModule } = require('../../utils/module');
+const scanAppModules = require('../../utils/scanAppModules');
 const ControllerContainer = require('./ControllerContainer');
 
 
@@ -10,7 +10,7 @@ module.exports = function ControllerComponent(app, settings) {
   const controllerRoot = config.controllerRoot || pathUtil.join(appRoot, 'controllers');
 
   const container = new ControllerContainer();
-  app.controller = container.add.bind(container);
+  app.Controller = container;
 
   setupControllers(container, { controllerRoot });
 
@@ -20,12 +20,10 @@ module.exports = function ControllerComponent(app, settings) {
 
 
 function setupControllers(controller, { controllerRoot }) {
-  const rHidden = /^\..+/;
-  const list = fs.readdirSync(controllerRoot)
-    .filter(name => !rHidden.test(name));
+  const list = scanAppModules(controllerRoot);
   for (const file of list) {
     const path = pathUtil.join(controllerRoot, file);
-    const mod = loadModule(path);
+    const mod = tryLoadModule(path);
     if (mod) {
       const name = pathUtil.basename(file, pathUtil.extname(file));
       controller.add(name, mod);

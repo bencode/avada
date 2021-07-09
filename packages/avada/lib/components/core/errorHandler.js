@@ -10,7 +10,6 @@ module.exports = function createErrorHandler({ env }) {
     return next().catch(e => {
       const status = e.status || 500;
       ctx.app.emit('error', e, ctx);
-      global.console.error(e);
       const message = getMessage(env, e);
       ctx.status = status;
       if (ctx.is('application/json') ||
