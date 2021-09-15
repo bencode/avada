@@ -3,7 +3,7 @@ const debug = require('debug')('avada:boot');
 
 
 const Components = [
-  'core', 'web',
+  'core', 'web', 'container',
   'router', 'controller', 'service', 'view',
   'verify'
 ];
