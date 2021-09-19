@@ -1,12 +1,11 @@
+const { v4: uuid } = require('uuid');
 const debug = require('debug')('avada:web');
 const util = require('./util');
 
 
 module.exports = function WebComponent(app, settings) {
   const config = settings.web || {};
-  if (config.keys) {
-    initKeys(app, config.keys);
-  }
+  initKeys(app, config.keys);
 
   require('./params')(app);
 
@@ -21,6 +20,10 @@ module.exports = function WebComponent(app, settings) {
 // private
 
 function initKeys(app, keys) {
+  if (!keys) {
+    keys = uuid();
+    global.console.warn('app.keys missing, auto gen: %s', keys);
+  }
   keys = typeof keys === 'string' ? [keys] : keys;
   app.keys = keys;
 }

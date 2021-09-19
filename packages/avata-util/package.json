@@ -1,0 +1,25 @@
+{
+  "name": "avada-util",
+  "version": "1.0.0-beta.1",
+  "description": "utility tools for application",
+  "main": "lib/index.js",
+  "scripts": {
+    "lint": "eslint lib",
+    "test": "jest lib",
+    "ci": "npm run lint && npm run test"
+  },
+  "dependencies": {
+    "ramda": "^0.27.1"
+  },
+  "devDependencies": {
+    "eslint": "^7.27.0",
+    "eslint-config-bce": "^7.0.0",
+    "jest": "^27.0.3"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
+  },
+  "repository": "git@github.com:bencode/avada.git",
+  "author": "bencode <bencode@163.com>",
+  "license": "MIT"
+}

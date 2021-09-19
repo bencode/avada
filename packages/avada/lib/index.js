@@ -3,12 +3,17 @@ const debug = require('debug')('avada:boot');
 
 
 const Components = [
-  'core', 'web', 'router', 'controller', 'service', 'view'
+  'core', 'web', 'container',
+  'router', 'controller', 'service', 'view',
+  'verify'
 ];
 
 
 module.exports = function(config) {
+  config = normalizeConfig(config);
   const app = new Koa();
+  let started = false;
+  let stopped = false;
 
   const list = [];
   for (const name of Components) {
@@ -20,7 +25,13 @@ module.exports = function(config) {
   }
 
   app.start = async(opts = {}) => {
+    if (started) {
+      debug('already started, ignore');
+      return null;
+    }
+
     debug('app.start');
+    started = true;
     for (const item of list) {
       if (typeof item.start === 'function') {
         debug('start component: %s', item.name);
@@ -31,13 +42,24 @@ module.exports = function(config) {
     const { listen = true } = opts;
     if (listen) {
       const port = (config.server || {}).port || 3000;
-      const server = app.listen(port);
-      global.console.log(`server listen at: ${port}`);
+      const server = app.listen(port, () => {
+        global.console.log(`server listen at: ${port}`);
+      });
       return server;
     }
+    return null;
   };
 
   app.stop = async() => {
+    if (!started) {
+      throw new Error('app not started');
+    }
+    if (stopped) {
+      debug('app stopped, ignore');
+      return;
+    }
+    stopped = true;
+
     debug('app.stop');
     for (const item of list.reverse()) {
       if (typeof item.stop === 'function') {
@@ -67,4 +89,12 @@ module.exports = function(config) {
 function makeArray(list) {
   return (list === undefined || list === null) ? [] :
     Array.isArray(list) ? list : [list];
+}
+
+function normalizeConfig(config) {
+  return {
+    env: process.env.NODE_ENV || 'development',
+    applicationRoot: process.cwd(),
+    ...config
+  };
 }

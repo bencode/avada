@@ -7,15 +7,15 @@ const ViewContainer = require('./ViewContainer');
 module.exports = function ViewComponent(app, settings) {
   const env = settings.env;
   const container = new ViewContainer({ env });
+  app.View = container;
 
-  app.engine = container.engine.bind(container);
-  app.view = container.add.bind(container);
   app.context.render = async function(name, data) {
     this.body = await container.render(name, data);
   };
 
   const config = settings.view || {};
-  const viewRoot = config.viewRoot || pathUtil.join(settings.appRoot, 'views');
+  const appRoot = settings.applicationRoot;
+  const viewRoot = config.viewRoot || pathUtil.join(appRoot, 'views');
   installDefaultEngine(container, { env, config });
   setupViews(container, { env, viewRoot });
 };
